@@ -1,0 +1,13 @@
+.form-field {
+  @apply w-full h-12 rounded-2xl p-5
+  font-medium outline-none outline-offset-0
+  bg-brand-dark/10 dark:bg-brand-light/10 dark:text-brand-light dark:placeholder-brand-light/20
+  focus:outline-1  focus:outline-brand-mid/30 focus:shadow-large focus:shadow-brand-primary
+  transition-all;
+}
+
+.register-btn {
+  @apply w-full h-12
+  items-center justify-center rounded-2xl
+  font-medium bg-brand-primary text-brand-light dark:bg-brand-primary/50 dark:text-brand-light;
+}

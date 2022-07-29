@@ -1,0 +1,54 @@
+.sbar::-webkit-scrollbar {
+  @apply w-2;
+}
+
+/* BG */
+.sbar::-webkit-scrollbar-track {
+  @apply bg-brand-light dark:bg-slate-800;
+}
+
+/* Kayan Kısım */
+.sbar::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-700;
+}
+
+/* Handle on hover */
+.sbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400/40 dark:bg-slate-600;
+}
+
+.message-list-area {
+  @apply flex flex-col w-full h-4/5 border rounded-3xl
+  bg-brand-light border-brand-primary/10
+  space-y-2
+  dark:bg-slate-800;
+}
+
+.texting-area {
+  @apply flex flex-col w-full h-4/5 border rounded-3xl
+  bg-brand-light border-brand-primary/10;
+}
+
+.online-users-area {
+  @apply flex flex-col w-full h-4/5 border rounded-3xl
+  bg-brand-light border-brand-primary/10
+  space-y-2;
+}
+
+.search-field {
+  @apply w-full h-10 outline-none rounded-full p-2 pl-9
+  text-sm
+  dark:bg-brand-dark dark:text-brand-light;
+}
+
+.message-list-user {
+  @apply flex w-full h-20 px-4 justify-between items-center focus:bg-slate-100 dark:focus:bg-slate-700 transition-all duration-100;
+}
+
+.user-pp {
+  @apply w-10 h-10 rounded-full bg-pink-500 mr-4;
+}
+
+.unread-message {
+  @apply flex justify-center items-center bg-blue-500 rounded-full text-brand-light;
+}
