@@ -56,12 +56,82 @@ const OnlineUsers = () => {
   );
 };
 
+const IncomingMessage = ({ color, from, message }) => {
+  return (
+    <div className="w-full" tabindex="0">
+      {from !== "me" ? (
+        <div className="flex flex-col w-full items-start space-x-2">
+          <div className={"flex l-0 font-medium " + color}>{from}:</div>
+          <div className="message-content rounded-xl rounded-tl-none">{message}</div>
+        </div>
+      ) : (
+        <div className="flex flex-col w-full items-end space-x-2">
+          {/* <div className="flex l-0">{from}:</div> */}
+          <div className="message-content rounded-xl rounded-tr-none">{message}</div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Texting = () => {
   return (
-    <div className="flex h-full w-3/5">
+    <div className="flex flex-col h-full w-3/5">
       <div className="texting-area">
-        <div className="">
-          <div className="relative p-4"></div>
+        <div className="message-header">
+          <div className="flex h-10  flex-row justify-start items-center ">
+            <div className="font-medium dark:text-brand-light">Muhittin ve tayfası</div>
+          </div>
+        </div>
+        <div className="message-area">
+          <div className="messaging w-full overflow-auto sbar">
+            <IncomingMessage
+              color="text-purple-700"
+              from="Mustafa Dönmez"
+              message="Ahhg"
+            />
+            <IncomingMessage
+              color="text-green-700"
+              from="Umut Uyar"
+              message="instagram linki"
+            />
+            <IncomingMessage
+              color="text-amber-700"
+              from="Ahmet Göver"
+              message="Helal olsun"
+            />
+            <IncomingMessage
+              color="text-amber-700"
+              from="Ahmet Göver"
+              message="Adamların tek derdi cips den yuvarlak yapmak"
+            />
+            <IncomingMessage
+              color="text-green-700"
+              from="Umut Uyar"
+              message="O kadar kutu cips"
+            />
+            <IncomingMessage
+              color="text-green-700"
+              from="Umut Uyar"
+              message="130 TL falan"
+            />
+            <IncomingMessage
+              color="text-emerald-700"
+              from="Burak Babal"
+              message="Ismarlasana"
+            />
+            <IncomingMessage color="text-green-700" from="me" message="instagram linki" />
+            <IncomingMessage
+              color="text-amber-700"
+              from="Ahmet Göver"
+              message="İnanılmaz"
+            />
+          </div>
+        </div>
+        <div className="write-area">
+          <div className="relative">
+            <input type="text" name="message" className=" text-field" />
+          </div>
         </div>
       </div>
     </div>
@@ -69,10 +139,24 @@ const Texting = () => {
 };
 
 const MessageList = () => {
+  const list = [
+    { from: "Muhittin ve tayfası", date: "00.00", message: "Umut: 🤡", amount: "296" },
+    { from: "Annem", date: "00.00", message: "Tamam", amount: "0" },
+    {
+      from: "UBCAK Bildiri Grubu",
+      date: "00.00",
+      message: "Bilgilendirme yapacaklardır.",
+      amount: "0",
+    },
+    { from: "Ahmet Göver", date: "00.00", message: "Sendeyiz", amount: "0" },
+    { from: "Babam", date: "00.00", message: "Fotoğraf", amount: "0" },
+    { from: "Doktor Sena", date: "00.00", message: "Sağol 🙏", amount: "0" },
+  ];
+
   return (
-    <div className="flex flex-col h-full w-1/5 rounded-3xl">
+    <div className="flex flex-col h-full w-1/5">
       <div className="message-list-area">
-        <div className="bg-gradient-to-t from-slate-300 to-slate-100 rounded-t-3xl dark:bg-gradient-to-t dark:from-slate-800 dark:to-slate-700">
+        <div className="bg-gradient-to-t from-slate-300 to-slate-100 dark:bg-gradient-to-t dark:from-slate-800 dark:to-slate-700">
           <div className="relative p-4">
             <button className="absolute mt-0 mb-0 top-0 bottom-0 left-6 text-center text-brand-dark/50 dark:text-brand-light/50">
               <SearchIcon />
@@ -86,23 +170,9 @@ const MessageList = () => {
           </div>
         </div>
         <div className="overflow-auto sbar">
-          <User from="Muhittin ve tayfası" date="00.00" message="Umut: 🤡" amount="296" />
-          <User from="Annem" date="00.00" message="Tamam" amount="0" />
-          <User
-            from="UBCAK Bildiri Grubu"
-            date="00.00"
-            message="Bilgilendirme yapacaklardır."
-            amount="0"
-          />
-          <User from="Ahmet Göver" date="00.00" message="Tamam görüşürüz." amount="0" />
-          <User
-            from="GTÜ Çevre"
-            date="00.00"
-            message="+90 012 345 67 89: Selam arkadaşlar"
-            amount="0"
-          />
-          <User from="Babam" date="00.00" message="Fotoğraf" amount="0" />
-          <User from="Doktor Sena" date="00.00" message="Sağol" amount="0" />
+          {list?.map((i) => (
+            <User from={i.from} date={i.date} message={i.message} amount={i.amount} />
+          ))}
         </div>
       </div>
     </div>
@@ -114,7 +184,7 @@ const MessagesPage = () => {
     <>
       <Header logoarea darkmode />
       <div className="flex w-full h-full justify-center items-start">
-        <div className="flex flex-row w-full h-full max-w-7xl">
+        <div className="flex flex-row w-full h-full">
           <MessageList />
           <Texting />
           <OnlineUsers />

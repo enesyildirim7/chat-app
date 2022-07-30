@@ -18,19 +18,20 @@
 }
 
 .message-list-area {
-  @apply flex flex-col w-full h-4/5 border rounded-3xl
+  @apply flex flex-col w-full h-4/5 border 
   bg-brand-light border-brand-primary/10
   space-y-2
   dark:bg-slate-800;
 }
 
 .texting-area {
-  @apply flex flex-col w-full h-4/5 border rounded-3xl
-  bg-brand-light border-brand-primary/10;
+  @apply flex flex-col w-full h-4/5 border
+  bg-brand-light border-brand-primary/10
+  dark:bg-slate-800;
 }
 
 .online-users-area {
-  @apply flex flex-col w-full h-4/5 border rounded-3xl
+  @apply flex flex-col w-full h-4/5 border 
   bg-brand-light border-brand-primary/10
   space-y-2;
 }
@@ -51,4 +52,30 @@
 
 .unread-message {
   @apply flex justify-center items-center bg-blue-500 rounded-full text-brand-light;
+}
+
+.message-header {
+  @apply flex w-full p-4 pl-8
+  border-b border-brand-dark/20 dark:border-brand-light/20;
+}
+
+.message-area {
+  @apply flex w-full h-full py-2;
+  overflow: auto;
+}
+
+.messaging {
+  @apply flex flex-col w-full space-y-2 px-4 text-[12px] items-end text-brand-dark dark:text-brand-light;
+}
+
+.message-content {
+  @apply px-4 py-1 bg-slate-300 dark:bg-slate-700 font-medium;
+}
+
+.write-area {
+  @apply w-full p-6 bg-brand-light dark:bg-slate-800 border-t border-brand-dark/10 dark:border-brand-light/20;
+}
+
+.text-field {
+  @apply w-full rounded-full outline-none px-4 py-2 font-normal text-[12px] bg-brand-dark/10 dark:bg-brand-light/20 dark:text-brand-light;
 }
