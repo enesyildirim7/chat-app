@@ -6,6 +6,7 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import MapsUgcRoundedIcon from "@mui/icons-material/MapsUgcRounded";
 import { IconButton } from "@mui/material";
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
 
 const User = ({ from, message, date, amount }) => {
   return (
@@ -172,8 +173,11 @@ const Texting = () => {
           </div>
         </div>
         <div className="write-area">
-          <div className="relative">
+          <div className="flex flex-row items-center justify-between text-field-wrapper">
             <input type="text" name="message" className="text-field" />
+            <button className="ml-4 text-brand-primary rounded-full">
+              <SendRoundedIcon />
+            </button>
           </div>
         </div>
       </div>

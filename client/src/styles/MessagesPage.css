@@ -76,8 +76,12 @@
   @apply w-full p-6 bg-brand-light dark:bg-slate-800 border-t border-brand-dark/10 dark:border-brand-light/20;
 }
 
+.text-field-wrapper {
+  @apply w-full rounded-full outline-none px-6 py-3 pr-4 font-normal text-[12px] bg-brand-dark/10 dark:bg-brand-light/10 dark:text-brand-light;
+}
+
 .text-field {
-  @apply w-full rounded-full outline-none px-4 py-2 font-normal text-[12px] bg-brand-dark/10 dark:bg-brand-light/10 dark:text-brand-light;
+  @apply w-full outline-none font-medium text-[14px] bg-transparent;
 }
 
 .users-header {
