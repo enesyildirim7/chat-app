@@ -2,10 +2,14 @@ import React from "react";
 import Header from "../components/Header";
 import "../styles/MessagesPage.css";
 import SearchIcon from "@mui/icons-material/Search";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import MapsUgcRoundedIcon from "@mui/icons-material/MapsUgcRounded";
+import { IconButton } from "@mui/material";
 
 const User = ({ from, message, date, amount }) => {
   return (
-    <div className="message-list-user" tabindex="0">
+    <div className="message-list-user" tabIndex={0}>
       <div className="flex flex-row h-full items-center">
         <div className="user-pp"></div>
         <div className="flex py-4 flex-col text-sm justify-between h-full">
@@ -48,26 +52,65 @@ const User = ({ from, message, date, amount }) => {
   );
 };
 
+const OnlineUser = ({ name }) => {
+  return (
+    <div className="w-full">
+      <div className="online-user" tabIndex={0}>
+        {name}
+      </div>
+    </div>
+  );
+};
+
 const OnlineUsers = () => {
   return (
-    <div className="flex h-full w-1/5">
-      <div className="online-users-area"></div>
+    <div className="flex flex-col h-full w-1/5">
+      <div className="online-users-area">
+        <div className="users-header">
+          <div className="flex h-10 w-full justify-center items-center">
+            <div className="font-medium text-brand-dark dark:text-brand-light">
+              Onlines
+            </div>
+          </div>
+        </div>
+        <div className="users-area sbar">
+          <div className="online-user-list">
+            <OnlineUser name="Alpar Develi" />
+          </div>
+        </div>
+        <div className="setting-area">
+          <div className="p-2 px-8 flex flex-row justify-center space-x-8 text-brand-dark dark:text-brand-light">
+            <button>
+              <MapsUgcRoundedIcon />
+            </button>
+            <button>
+              <PersonRoundedIcon />
+            </button>
+            <button>
+              <SettingsRoundedIcon />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
 const IncomingMessage = ({ color, from, message }) => {
   return (
-    <div className="w-full" tabindex="0">
+    <div className="w-full" tabIndex={0}>
       {from !== "me" ? (
         <div className="flex flex-col w-full items-start space-x-2">
           <div className={"flex l-0 font-medium " + color}>{from}:</div>
-          <div className="message-content rounded-xl rounded-tl-none">{message}</div>
+          <div className="message-content rounded-xl rounded-tl-none bg-slate-300 dark:bg-slate-700">
+            {message}
+          </div>
         </div>
       ) : (
         <div className="flex flex-col w-full items-end space-x-2">
-          {/* <div className="flex l-0">{from}:</div> */}
-          <div className="message-content rounded-xl rounded-tr-none">{message}</div>
+          <div className="message-content rounded-xl rounded-tr-none bg-brand-primary text-brand-light">
+            {message}
+          </div>
         </div>
       )}
     </div>
@@ -79,12 +122,12 @@ const Texting = () => {
     <div className="flex flex-col h-full w-3/5">
       <div className="texting-area">
         <div className="message-header">
-          <div className="flex h-10  flex-row justify-start items-center ">
+          <div className="flex h-10 flex-row justify-start items-center">
             <div className="font-medium dark:text-brand-light">Muhittin ve tayfası</div>
           </div>
         </div>
-        <div className="message-area">
-          <div className="messaging w-full overflow-auto sbar">
+        <div className="message-area sbar">
+          <div className="messaging pb-4">
             <IncomingMessage
               color="text-purple-700"
               from="Mustafa Dönmez"
@@ -130,7 +173,7 @@ const Texting = () => {
         </div>
         <div className="write-area">
           <div className="relative">
-            <input type="text" name="message" className=" text-field" />
+            <input type="text" name="message" className="text-field" />
           </div>
         </div>
       </div>
@@ -150,13 +193,13 @@ const MessageList = () => {
     },
     { from: "Ahmet Göver", date: "00.00", message: "Sendeyiz", amount: "0" },
     { from: "Babam", date: "00.00", message: "Fotoğraf", amount: "0" },
-    { from: "Doktor Sena", date: "00.00", message: "Sağol 🙏", amount: "0" },
+    // { from: "Doktor Sena", date: "00.00", message: "Sağol 🙏", amount: "0" },
   ];
 
   return (
     <div className="flex flex-col h-full w-1/5">
       <div className="message-list-area">
-        <div className="bg-gradient-to-t from-slate-300 to-slate-100 dark:bg-gradient-to-t dark:from-slate-800 dark:to-slate-700">
+        <div className="bg-brand-light dark:bg-slate-800 ">
           <div className="relative p-4">
             <button className="absolute mt-0 mb-0 top-0 bottom-0 left-6 text-center text-brand-dark/50 dark:text-brand-light/50">
               <SearchIcon />
@@ -169,10 +212,12 @@ const MessageList = () => {
             ></input>
           </div>
         </div>
-        <div className="overflow-auto sbar">
-          {list?.map((i) => (
-            <User from={i.from} date={i.date} message={i.message} amount={i.amount} />
-          ))}
+        <div className="relative flex w-full h-full overflow-auto sbar">
+          <div className="absolute flex flex-col w-full">
+            {list?.map((i) => (
+              <User from={i.from} date={i.date} message={i.message} amount={i.amount} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
