@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
-import { v4 as uuidv4 } from "uuid";
+const { v4: uuidv4 } = require("uuid");
 
 const MessageModel = new Schema({
-  id: { type: ObjectId, required: true, default: uuidv4(), unique: true },
+  _id: { type: String, default: uuidv4 },
   message: { type: String },
-  //   sender: {} TODO: Relation with user
+  sender: { type: String }, // TODO: Relation with user
   created: { type: Date, default: Date.now() },
   updated: { type: Date, default: Date.now() },
 });
 
-mongoose.model("Message", MessageModel);
+module.exports = mongoose.model("Message", MessageModel);

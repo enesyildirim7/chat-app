@@ -1,13 +1,15 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
-import { v4 as uuidv4 } from "uuid";
+const { v4: uuidv4 } = require("uuid");
 
 const ChannelModel = new Schema({
-  id: { type: ObjectId, required: true, default: uuidv4(), unique: true },
-  //   members: {} TODO: Relation with user
-  //   messages: { },TODO: Relation with user messages
+  _id: { type: String, default: uuidv4 },
+  name: { type: String },
+  creator: { type: mongoose.SchemaTypes.ObjectId },
+  members: [{ type: Array }], //TODO: Relation with user
+  messages: [{ type: String }], //TODO: Relation with user messages
   created: { type: Date, default: Date.now() },
   updated: { type: Date, default: Date.now() },
 });
 
-mongoose.model("Channel", ChannelModel);
+module.exports = mongoose.model("Channel", ChannelModel);

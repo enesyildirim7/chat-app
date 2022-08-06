@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import { Link } from "react-router-dom";
 import Checkbox from "@mui/material/Checkbox";
 import DoneAllRoundedIcon from "@mui/icons-material/DoneAllRounded";
+import axios from "axios";
 
 const RegisterForm = () => {
   const [user, setUser] = useState({
@@ -17,7 +18,20 @@ const RegisterForm = () => {
   const registerChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
-  const registerSubmit = () => {};
+  const registerSubmit = () => {
+    axios
+      .post("http://localhost:5000/api/user/signup", {
+        username: "enes1",
+        email: "q@q.com",
+        password: "123456",
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
   return (
     <div className="flex flex-col w-full justify-center items-center max-w-md">
       <form
@@ -97,11 +111,11 @@ const RegisterForm = () => {
             </Link>
           </div>
         </div>
-        <Link to="/messages">
-          <button type="button" className="register-btn">
-            Sign Up
-          </button>
-        </Link>
+        {/* <Link to="/messages"> */}
+        <button type="button" className="register-btn" onClick={registerSubmit}>
+          Sign Up
+        </button>
+        {/* </Link> */}
       </form>
       <div className="flex flex-row w-full justify-center divide-brand-light/30 text-sm mt-6 text-brand-dark dark:text-brand-light/75">
         <div className="mr-2">Already have an account?</div>

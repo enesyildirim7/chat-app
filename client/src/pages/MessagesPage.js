@@ -174,7 +174,7 @@ const Texting = () => {
         </div>
         <div className="write-area">
           <div className="flex flex-row items-center justify-between text-field-wrapper">
-            <input type="text" name="message" className="text-field" />
+            <textarea type="text" name="message" className="text-field" />
             <button className="ml-4 text-brand-primary rounded-full">
               <SendRoundedIcon />
             </button>
@@ -187,16 +187,29 @@ const Texting = () => {
 
 const MessageList = () => {
   const list = [
-    { from: "Muhittin ve tayfası", date: "00.00", message: "Umut: 🤡", amount: "296" },
-    { from: "Annem", date: "00.00", message: "Tamam", amount: "0" },
     {
+      channelId: 1,
+      from: "Muhittin ve tayfası",
+      date: "00.00",
+      message: "Umut: 🤡",
+      amount: "296",
+    },
+    { channelId: 2, from: "Annem", date: "00.00", message: "Tamam", amount: "0" },
+    {
+      channelId: 3,
       from: "UBCAK Bildiri Grubu",
       date: "00.00",
       message: "Bilgilendirme yapacaklardır.",
       amount: "0",
     },
-    { from: "Ahmet Göver", date: "00.00", message: "Sendeyiz", amount: "0" },
-    { from: "Babam", date: "00.00", message: "Fotoğraf", amount: "0" },
+    {
+      channelId: 4,
+      from: "Ahmet Göver",
+      date: "00.00",
+      message: "Sendeyiz",
+      amount: "0",
+    },
+    { channelId: 5, from: "Babam", date: "00.00", message: "Fotoğraf", amount: "0" },
     // { from: "Doktor Sena", date: "00.00", message: "Sağol 🙏", amount: "0" },
   ];
 
@@ -219,7 +232,13 @@ const MessageList = () => {
         <div className="relative flex w-full h-full overflow-auto sbar">
           <div className="absolute flex flex-col w-full">
             {list?.map((i) => (
-              <User from={i.from} date={i.date} message={i.message} amount={i.amount} />
+              <User
+                key={i.channelId}
+                from={i.from}
+                date={i.date}
+                message={i.message}
+                amount={i.amount}
+              />
             ))}
           </div>
         </div>

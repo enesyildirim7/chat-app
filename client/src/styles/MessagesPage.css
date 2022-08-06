@@ -44,7 +44,7 @@
 }
 
 .message-list-user {
-  @apply flex w-full h-20 px-4 justify-between items-center focus:bg-slate-100 dark:focus:bg-slate-700 transition-all duration-100;
+  @apply flex w-full h-20 px-4 justify-between items-center focus:bg-slate-100 dark:focus:bg-slate-700 transition-all duration-100 cursor-pointer;
 }
 
 .user-pp {
@@ -81,7 +81,7 @@
 }
 
 .text-field {
-  @apply w-full outline-none font-medium text-[14px] bg-transparent;
+  @apply w-full outline-none font-medium text-[14px] bg-transparent resize-none;
 }
 
 .users-header {
@@ -104,5 +104,5 @@
 .online-user {
   @apply flex items-center justify-center text-start text-[14px] h-10 w-full truncate
   rounded-xl hover:bg-brand-dark/10 dark:hover:bg-brand-light/10 transition-all
-  text-brand-dark dark:text-brand-light;
+  text-brand-dark dark:text-brand-light cursor-pointer;
 }

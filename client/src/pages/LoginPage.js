@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "../styles/LoginPage.css";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
@@ -9,7 +10,7 @@ import { useSelector } from "react-redux";
 
 const LoginForm = () => {
   const darkMode = useSelector((state) => state.darkMode).darkMode;
-  const [user, setUser] = useState({ username: "", password: "" });
+  const [user, setUser] = useState({ email: "", password: "" });
   const showPassword = () => {
     const passhow = document.getElementById("password").type;
 
@@ -18,12 +19,20 @@ const LoginForm = () => {
     } else {
       document.getElementById("password").type = "password";
     }
-    console.log(passhow);
   };
   const loginChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
-  const loginSubmit = () => {};
+  const loginSubmit = () => {
+    axios
+      .post("http://localhost:5000/api/user/login", user, { withCredentials: true })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div className="flex flex-col w-full justify-center items-center max-w-xs">
       <form
@@ -32,11 +41,12 @@ const LoginForm = () => {
         className="flex flex-col w-full space-y-4"
       >
         <input
-          type="text"
-          name="username"
-          value={user.username}
+          type="email"
+          name="email"
+          required
+          value={user.email}
           onChange={loginChange}
-          placeholder="Username"
+          placeholder="Email"
           className="username-field"
         ></input>
         <div className="relative">
@@ -67,17 +77,18 @@ const LoginForm = () => {
             id="password"
             type="password"
             name="password"
+            required
             value={user.password}
             onChange={loginChange}
             placeholder="Password"
             className="password-field"
           ></input>
         </div>
-        <Link to="/messages">
-          <button type="button" className="login-btn">
-            Login
-          </button>
-        </Link>
+        {/* <Link to="/messages"> */}
+        <button type="button" className="login-btn" onClick={loginSubmit}>
+          Login
+        </button>
+        {/* </Link> */}
       </form>
       <div className="flex flex-row w-full justify-center divide-brand-light/30 text-sm mt-6 text-brand-dark dark:text-brand-light/75">
         <div className="mr-2">Don't have an account?</div>

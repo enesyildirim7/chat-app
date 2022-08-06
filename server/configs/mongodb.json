@@ -1,0 +1,5 @@
+{
+  "local": "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.5.4",
+  "mongoserver": "mongodb+srv://enes:a21b342158@sjmongo.nilif8x.mongodb.net/?retryWrites=true&w=majority",
+  "production": ""
+}
