@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
 const UserModel = require("../models/UserModel");
+const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const {
   signupVerify,
   loginVerify,
   signAccessJWT,
   signRefreshJWT,
+  verifyRefreshJWT,
+  verifyAccessJWT,
+  checkVerify,
 } = require("../middlewares/auth");
 
 const signup = async (req, res) => {
@@ -16,15 +20,6 @@ const signup = async (req, res) => {
   } else {
     const checkUsername = await UserModel.findOne({ username: req.body.username });
     const checkEmail = await UserModel.findOne({ email: req.body.email });
-    console.log(
-      checkUsername?.username,
-      "<->",
-      req.body.username,
-      " - ",
-      checkEmail?.email,
-      "<->",
-      req.body.email
-    );
 
     if (checkUsername?.username === req.body.username) {
       res.status(404).send("This username already exist.");
@@ -32,6 +27,8 @@ const signup = async (req, res) => {
       res.status(404).send("This email already exist.");
     } else {
       const newUser = new UserModel({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
@@ -39,10 +36,11 @@ const signup = async (req, res) => {
 
       newUser
         .save()
-        .then((data) => {
-          res.status(201).send(data);
+        .then(() => {
+          res.status(201).send("Successfully registered");
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err);
           res.status(404).send("User failed to registered");
         });
     }
@@ -86,24 +84,46 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res) => {
   try {
-    res.clearCookie("access_token");
-    res.clearCookie("refresh_token");
-    res.status(200).send("Logout");
+    const cookies = req.cookies;
+    const accessToken = cookies.access_token;
+    const refreshToken = cookies.refresh_token;
+    if (accessToken && refreshToken) {
+      const decodedRefresh = verifyRefreshJWT(refreshToken);
+
+      const user = await UserModel.findById(decodedRefresh.id);
+      if (user) {
+        user.removeRefreshToken();
+        user.removeAccessToken();
+
+        res.clearCookie("access_token");
+        res.clearCookie("refresh_token");
+        res.status(200).send("Logout");
+      } else {
+        throw new Error("User does not exist.");
+      }
+    } else {
+      res.status(200).send("User already logout.");
+    }
   } catch (err) {
     res.status(401).send(err);
   }
 };
 
 const userData = (req, res) => {
-  console.log(req.cookies);
-  const jwt_token = String(req.cookies["access_token"]);
-  console.log(jwt_token);
-  const user = jwt.decode(jwt_token);
-  console.log(user);
-  UserModel.findById(user.user._id)
+  const accessToken = String(req.cookies.access_token);
+  const user = verifyAccessJWT(accessToken);
+  UserModel.findById(user.id)
     .then((data) => {
-      console.log("User:", data);
-      res.status(200).send(data);
+      const user = _.pick(data, [
+        "firstName",
+        "lastName",
+        "username",
+        "isActive",
+        "isVerify",
+        "isAdmin",
+        "isStaff",
+      ]);
+      res.status(200).send(user);
     })
     .catch((err) => {
       res.status(400).send(err);

@@ -7,6 +7,8 @@ const JwtCookieComboStrategy = require("passport-jwt-cookiecombo").Strategy;
 const UserModel = require("../models/UserModel");
 
 const jwtConf = {
+  accessTokenName: "access_token",
+  refreshTokenName: "refresh_token",
   access_secret: "ACCESS_SECRET",
   refresh_secret: "REFRESH_SECRET",
   access_expire: "10m",
@@ -15,7 +17,7 @@ const jwtConf = {
   refresh: "refresh",
 };
 
-const signAccessJWT = (id, email) => {
+const signAccessJWT = (id = String, email = String) => {
   try {
     const accessPayload = { id: id, email: email, type: jwtConf.access };
 
@@ -29,7 +31,7 @@ const signAccessJWT = (id, email) => {
   }
 };
 
-const signRefreshJWT = (id, email) => {
+const signRefreshJWT = (id = String, email = String) => {
   try {
     const refreshPayload = { id: id, email: email, type: jwtConf.refresh };
 
@@ -44,20 +46,36 @@ const signRefreshJWT = (id, email) => {
 };
 
 const verifyAccessJWT = (accessToken = String) => {
-  try {
-    const token = jwt.verify(accessToken, jwtConf.access_secret);
-    return token;
-  } catch (err) {
-    return err;
+  if (
+    accessToken === null ||
+    accessToken === undefined ||
+    typeof accessToken !== "string"
+  ) {
+    throw new Error("Access token is required");
+  } else {
+    try {
+      const token = jwt.verify(accessToken, jwtConf.access_secret);
+      return token;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 };
 
 const verifyRefreshJWT = (refreshToken = String) => {
-  try {
-    const token = jwt.verify(refreshToken, jwtConf.refresh_secret);
-    return token;
-  } catch (err) {
-    return err;
+  if (
+    refreshToken === null ||
+    refreshToken === undefined ||
+    typeof refreshToken !== "string"
+  ) {
+    throw new Error("Refresh token is required");
+  } else {
+    try {
+      const token = jwt.verify(refreshToken, jwtConf.refresh_secret);
+      return token;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 };
 
@@ -65,47 +83,72 @@ const tokenRefresh = async (refreshToken = String) => {
   try {
     const token = verifyRefreshJWT(refreshToken);
     var user = await UserModel.findById(token.id);
-
     if (user) {
-      console.log("r", 1);
       var newAccessToken = await signAccessJWT(token.id, token.email);
       user.setAccessToken(newAccessToken);
       return newAccessToken;
+    } else {
+      throw new Error("User does not exist.");
     }
   } catch (err) {
-    console.log("r", 2);
-    console.log(err);
-    return err;
+    throw new Error(err);
   }
 };
 
 const checkAuth = async (req, res, next) => {
   try {
     const cookies = req.cookies;
+    const accessToken = cookies.access_token;
+    const refreshToken = cookies.refresh_token;
     if (cookies.access_token && cookies.refresh_token) {
-      const accessToken = cookies.access_token;
-      const refreshToken = cookies.refresh_token;
-
       try {
         var verifiedAccess = verifyAccessJWT(accessToken);
         const user = await UserModel.findById(verifiedAccess.id);
 
-        // const expAccess = new Date(verifiedAccess.exp * 1000);
         if (user) {
-          console.log(1);
-          res.status(200).send("Authorized");
+          // res.status(200).send("Authorized");
+          next();
+        } else {
+          throw new Error("User does not exist.");
         }
       } catch {
-        console.log(2);
         const newAccessToken = await tokenRefresh(refreshToken);
 
-        // res.status(200).send("Access token refreshed");
-        next(newAccessToken);
+        res.clearCookie(jwtConf.accessTokenName);
+        res.cookie(jwtConf.accessTokenName, newAccessToken, {
+          httpOnly: true,
+          secure: true,
+        });
+        // res.status(200).send("New Access Token Set");
+        next();
       }
+    } else {
+      throw new Error("Tokens not found in cookies");
     }
   } catch (err) {
-    console.log(3);
-    console.log(err);
+    res.status(401).send("Please login.");
+  }
+};
+
+const checkVerify = async (req, res, next) => {
+  try {
+    const cookies = req.cookies;
+    const accessToken = cookies.access_token;
+    if (accessToken) {
+      const id = verifyAccessJWT(accessToken);
+      const user = await UserModel.findById(id.id);
+      if (user.isVerify) {
+        next();
+      } else if (!user.isVerify) {
+        res.status(401).send("Please verify your email.");
+      } else {
+        throw new Error("User does not exist.");
+      }
+    } else {
+      throw new Error("Access token not found in cookies");
+    }
+  } catch {
+    res.status(404).send("Something went wrong.");
   }
 };
 
@@ -158,4 +201,11 @@ const checkAuth = async (req, res, next) => {
 //   )
 // );
 
-module.exports = { signAccessJWT, signRefreshJWT, checkAuth };
+module.exports = {
+  signAccessJWT,
+  signRefreshJWT,
+  verifyRefreshJWT,
+  verifyAccessJWT,
+  checkAuth,
+  checkVerify,
+};

@@ -13,7 +13,7 @@ const {
   getAllUsers,
   deleteUser,
 } = require("../controllers/UserControllers");
-const { checkAuth } = require("../middlewares/auth");
+const { checkAuth, checkVerify } = require("../middlewares/auth");
 
 const router = express.Router();
 
@@ -26,15 +26,11 @@ router.post("/login", login);
 
 router.get("/me", checkAuth, userData);
 
-router.get("/checkauth", checkAuth, async (req, res) => {
-  res.clearCookie("access_token");
-  res.cookie("access_token", newAccessToken, {
-    httpOnly: true,
-    secure: true,
-  });
+router.get("/checkauth", checkAuth, (req, res) => {
+  res.status(200).send("Authorize");
 });
 
-router.get("/logout", logout);
+router.post("/logout", logout);
 
 router.delete("/me", deleteUser);
 
@@ -42,14 +38,18 @@ router.delete("/me", deleteUser);
 router.get("/all", getAllUsers);
 
 router.delete("/delete/all", async (req, res) => {
-  const idlist = [];
-  const ids = await UserModel.find({});
-  ids.forEach((user) => {
-    idlist.push(user._id);
-  });
-  console.log(idlist);
-  for (let i = 0; i < ids.length; i++) {
-    UserModel.deleteOne({ _id: ids[i] });
+  try {
+    const idlist = [];
+    const ids = await UserModel.find({});
+    ids.forEach((user) => {
+      idlist.push(user._id);
+    });
+    for (let i = 0; i < ids.length; i++) {
+      await UserModel.findByIdAndDelete(ids[i]);
+    }
+    res.status(200).send("All user deleted.");
+  } catch {
+    res.status(404).send("Silinmedi.");
   }
 });
 

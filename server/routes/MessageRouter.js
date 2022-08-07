@@ -6,13 +6,14 @@ const {
   getMessage,
   deleteMessage,
 } = require("../controllers/MessageControllers");
+const { checkVerify } = require("../middlewares/auth");
 const router = express.Router();
 
 // Message Create
 router.post("/create", createMessage);
 
 // Get All Message
-router.get("/all", getAllMessages);
+router.get("/all", checkVerify, getAllMessages);
 
 // Get specified message
 router.get("/:id", getMessage);
