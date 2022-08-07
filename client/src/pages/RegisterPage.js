@@ -8,8 +8,8 @@ import axios from "axios";
 
 const RegisterForm = () => {
   const [user, setUser] = useState({
-    name: "",
-    surname: "",
+    firstName: "",
+    lastName: "",
     username: "",
     email: "",
     password: "",
@@ -18,13 +18,17 @@ const RegisterForm = () => {
   const registerChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
+
+  const checkPassword = () => {
+    if (user.password !== user.passcheck) {
+      return false;
+    } else {
+      return true;
+    }
+  };
   const registerSubmit = () => {
     axios
-      .post("http://localhost:5000/api/user/signup", {
-        username: "enes1",
-        email: "q@q.com",
-        password: "123456",
-      })
+      .post("http://localhost:5000/api/user/signup", user)
       .then((res) => {
         console.log(res.data);
       })
@@ -42,19 +46,19 @@ const RegisterForm = () => {
         <div className="flex flex-row space-x-4">
           <input
             type="text"
-            name="name"
-            value={user.name}
+            name="firstName"
+            value={user.firstName}
             onChange={registerChange}
-            placeholder="Name"
+            placeholder="First Name"
             className="form-field"
             required
           ></input>
           <input
             type="text"
-            name="surname"
-            value={user.surname}
+            name="lastName"
+            value={user.lastName}
             onChange={registerChange}
-            placeholder="Surname"
+            placeholder="Last Name"
             className="form-field"
             required
           ></input>
@@ -86,7 +90,7 @@ const RegisterForm = () => {
             value={user.password}
             onChange={registerChange}
             placeholder="Password"
-            className="form-field"
+            className={checkPassword() ? "password-field" : "password-incorrect"}
             required
           ></input>
           <input
@@ -95,14 +99,14 @@ const RegisterForm = () => {
             value={user.passcheck}
             onChange={registerChange}
             placeholder="Confirm password"
-            className="form-field"
+            className={checkPassword() ? "password-field" : "password-incorrect"}
             required
           ></input>
         </div>
         <div className="flex flex-row space-x-1 items-center text-brand-dark dark:text-brand-light/75">
           <Checkbox
             sx={{ color: "#005eff" }}
-            checkedIcon={<DoneAllRoundedIcon sx={{ color: "#005eff" }} />}
+            checkedIcon={<DoneAllRoundedIcon sx={{ color: "#005eff" }} required />}
           />
           <div className="text-sm">
             I accept the{" "}
