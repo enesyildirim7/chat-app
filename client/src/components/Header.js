@@ -1,8 +1,11 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleDarkMode } from "../redux/darkModeSlice";
+import { setAuth } from "../redux/authSlice";
 import LoginButton from "../components/LoginButton";
 import RegisterButton from "../components/RegisterButton";
+import LogoutButton from "./LogoutButton";
+import ProfileButton from "./ProfileButton";
 import IconButton from "@mui/material/IconButton";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
@@ -42,16 +45,29 @@ export const DarkModeIcon = () => {
   );
 };
 
-const Header = React.memo(({ logoarea, darkmode, buttons }) => {
+const Header = React.memo(({ logoarea, darkmode, buttons, logout, api }) => {
+  const auth = useSelector((state) => state.auth.auth);
   return (
     <header className="flex w-full justify-between items-center min-h-24 px-48 py-6">
       {logoarea ? <LogoArea /> : null}
       <div className="flex flex-row space-x-3 justify-center items-center">
         {darkmode ? <DarkModeIcon /> : null}
         {buttons ? (
-          <>
-            <LoginButton /> <RegisterButton />
-          </>
+          auth === false || auth === "" ? (
+            <>
+              <LoginButton /> <RegisterButton />
+            </>
+          ) : (
+            <ProfileButton />
+          )
+        ) : null}
+        {logout ? <LogoutButton /> : null}
+        {api ? (
+          <Link to="/apitest">
+            <button className="rounded-lg bg-violet-500 text-slate-800 px-4 py-1.5">
+              Api Test
+            </button>
+          </Link>
         ) : null}
       </div>
     </header>

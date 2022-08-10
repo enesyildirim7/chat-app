@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "../styles/RegisterPage.css";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
 import Checkbox from "@mui/material/Checkbox";
 import DoneAllRoundedIcon from "@mui/icons-material/DoneAllRounded";
-import axios from "axios";
+import Axios from "../api/axios";
 
 const RegisterForm = () => {
   const [user, setUser] = useState({
@@ -26,12 +28,10 @@ const RegisterForm = () => {
       return true;
     }
   };
-  const registerSubmit = () => {
-    axios
-      .post("http://localhost:5000/api/user/signup", user)
-      .then((res) => {
-        console.log(res.data);
-      })
+  const registerSubmit = (e) => {
+    e.preventDefault();
+    Axios.post("/api/user/signup", user)
+      .then()
       .catch((err) => {
         console.log(err.response);
       });
@@ -115,11 +115,9 @@ const RegisterForm = () => {
             </Link>
           </div>
         </div>
-        {/* <Link to="/messages"> */}
-        <button type="button" className="register-btn" onClick={registerSubmit}>
+        <button type="submit" className="register-btn">
           Sign Up
         </button>
-        {/* </Link> */}
       </form>
       <div className="flex flex-row w-full justify-center divide-brand-light/30 text-sm mt-6 text-brand-dark dark:text-brand-light/75">
         <div className="mr-2">Already have an account?</div>
@@ -132,9 +130,10 @@ const RegisterForm = () => {
 };
 
 const RegisterPage = () => {
-  return (
+  const auth = useSelector((state) => state.auth.auth);
+  return auth === false || auth === "" ? (
     <>
-      <Header logoarea darkmode buttons />
+      <Header logoarea darkmode buttons api />
       <div className="flex flex-col w-full items-center justify-center">
         <div className="text-4xl font-bold text-brand-dark dark:text-brand-light mb-10">
           Sign up
@@ -142,6 +141,8 @@ const RegisterPage = () => {
         <RegisterForm />
       </div>
     </>
+  ) : (
+    <Navigate to="/" />
   );
 };
 

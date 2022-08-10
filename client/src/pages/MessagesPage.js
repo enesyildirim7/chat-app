@@ -250,7 +250,7 @@ const MessageList = () => {
 const MessagesPage = () => {
   return (
     <>
-      <Header logoarea darkmode />
+      <Header logoarea darkmode logout api />
       <div className="flex w-full h-full justify-center items-start">
         <div className="flex flex-row w-full h-full">
           <MessageList />

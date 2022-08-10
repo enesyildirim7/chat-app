@@ -27,7 +27,7 @@ const Content = () => {
 const HomePage = () => {
   return (
     <>
-      <Header logoarea darkmode buttons />
+      <Header logoarea darkmode buttons api />
       <div className="flex flex-col w-full h-full items-center">
         <Content />
         <Footer />

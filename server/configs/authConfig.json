@@ -1,0 +1,12 @@
+{
+  "jwtConf": {
+    "accessTokenName": "access_token",
+    "refreshTokenName": "refresh_token",
+    "access_secret": "ACCESS_SECRET",
+    "refresh_secret": "REFRESH_SECRET",
+    "access_expire": "20000",
+    "refresh_expire": "30d",
+    "access": "access",
+    "refresh": "refresh"
+  }
+}

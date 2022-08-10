@@ -1,28 +1,18 @@
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const authConfig = require("../configs/authConfig");
 const LocalStrategy = require("passport-local").Strategy;
 const JWTStrategy = require("passport-jwt").Strategy;
 const ExtractJWT = require("passport-jwt").ExtractJwt;
 const JwtCookieComboStrategy = require("passport-jwt-cookiecombo").Strategy;
 const UserModel = require("../models/UserModel");
 
-const jwtConf = {
-  accessTokenName: "access_token",
-  refreshTokenName: "refresh_token",
-  access_secret: "ACCESS_SECRET",
-  refresh_secret: "REFRESH_SECRET",
-  access_expire: "10m",
-  refresh_expire: "30d",
-  access: "access",
-  refresh: "refresh",
-};
-
 const signAccessJWT = (id = String, email = String) => {
   try {
-    const accessPayload = { id: id, email: email, type: jwtConf.access };
+    const accessPayload = { id: id, email: email, type: authConfig.jwtConf.access };
 
-    const accessToken = jwt.sign(accessPayload, jwtConf.access_secret, {
-      expiresIn: jwtConf.access_expire,
+    const accessToken = jwt.sign(accessPayload, authConfig.jwtConf.access_secret, {
+      expiresIn: authConfig.jwtConf.access_expire,
     });
 
     return accessToken;
@@ -33,10 +23,10 @@ const signAccessJWT = (id = String, email = String) => {
 
 const signRefreshJWT = (id = String, email = String) => {
   try {
-    const refreshPayload = { id: id, email: email, type: jwtConf.refresh };
+    const refreshPayload = { id: id, email: email, type: authConfig.jwtConf.refresh };
 
-    const refreshToken = jwt.sign(refreshPayload, jwtConf.refresh_secret, {
-      expiresIn: jwtConf.refresh_expire,
+    const refreshToken = jwt.sign(refreshPayload, authConfig.jwtConf.refresh_secret, {
+      expiresIn: authConfig.jwtConf.refresh_expire,
     });
 
     return refreshToken;
@@ -54,7 +44,7 @@ const verifyAccessJWT = (accessToken = String) => {
     throw new Error("Access token is required");
   } else {
     try {
-      const token = jwt.verify(accessToken, jwtConf.access_secret);
+      const token = jwt.verify(accessToken, authConfig.jwtConf.access_secret);
       return token;
     } catch (err) {
       throw new Error(err);
@@ -71,7 +61,7 @@ const verifyRefreshJWT = (refreshToken = String) => {
     throw new Error("Refresh token is required");
   } else {
     try {
-      const token = jwt.verify(refreshToken, jwtConf.refresh_secret);
+      const token = jwt.verify(refreshToken, authConfig.jwtConf.refresh_secret);
       return token;
     } catch (err) {
       throw new Error(err);
@@ -84,7 +74,7 @@ const tokenRefresh = async (refreshToken = String) => {
     const token = verifyRefreshJWT(refreshToken);
     var user = await UserModel.findById(token.id);
     if (user) {
-      var newAccessToken = await signAccessJWT(token.id, token.email);
+      var newAccessToken = await signAccessJWT(user._id, user.email);
       user.setAccessToken(newAccessToken);
       return newAccessToken;
     } else {
@@ -114,8 +104,8 @@ const checkAuth = async (req, res, next) => {
       } catch {
         const newAccessToken = await tokenRefresh(refreshToken);
 
-        res.clearCookie(jwtConf.accessTokenName);
-        res.cookie(jwtConf.accessTokenName, newAccessToken, {
+        res.clearCookie(authConfig.jwtConf.accessTokenName);
+        res.cookie(authConfig.jwtConf.accessTokenName, newAccessToken, {
           httpOnly: true,
           secure: true,
         });
@@ -206,6 +196,7 @@ module.exports = {
   signRefreshJWT,
   verifyRefreshJWT,
   verifyAccessJWT,
+  tokenRefresh,
   checkAuth,
   checkVerify,
 };

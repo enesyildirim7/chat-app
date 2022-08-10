@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const UserModel = require("../models/UserModel");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
+const authConfig = require("../configs/authConfig");
 const {
   signupVerify,
   loginVerify,
@@ -10,6 +11,7 @@ const {
   verifyRefreshJWT,
   verifyAccessJWT,
   checkVerify,
+  tokenRefresh,
 } = require("../middlewares/auth");
 
 const signup = async (req, res) => {
@@ -40,7 +42,6 @@ const signup = async (req, res) => {
           res.status(201).send("Successfully registered");
         })
         .catch((err) => {
-          console.log(err);
           res.status(404).send("User failed to registered");
         });
     }
@@ -138,6 +139,56 @@ const getAllUsers = (req, res) => {
 
 const deleteUser = (req, res) => {};
 
+const deleteAllUsers = async (req, res) => {
+  try {
+    const idlist = [];
+    const ids = await UserModel.find({});
+    ids.forEach((user) => {
+      idlist.push(user._id);
+    });
+    for (let i = 0; i < ids.length; i++) {
+      await UserModel.findByIdAndDelete(ids[i]);
+    }
+    res.status(200).send("All user deleted.");
+  } catch {
+    res.status(404).send("Silinmedi.");
+  }
+};
+
+const refreshToken = async (req, res) => {
+  try {
+    const cookies = req.cookies;
+    const refreshToken = cookies.refresh_token;
+    if (refreshToken) {
+      try {
+        var verifiedRefresh = verifyRefreshJWT(refreshToken);
+        const user = await UserModel.findById(verifiedRefresh.id);
+        if (user) {
+          const newAccessToken = await tokenRefresh(refreshToken);
+          try {
+            res.clearCookie(authConfig.jwtConf.accessTokenName);
+            res.cookie(authConfig.jwtConf.accessTokenName, newAccessToken, {
+              httpOnly: true,
+              secure: true,
+            });
+            res.status(201).send("Access Token refreshed");
+          } catch {
+            res.status(404).send("Cookies are not set.");
+          }
+        } else {
+          res.status(401).send("User does not exist.");
+        }
+      } catch {
+        res.status(401).send("Token error.");
+      }
+    } else {
+      res.status(401).send("Tokens not found in cookies");
+    }
+  } catch {
+    res.status(401).send("Please login.");
+  }
+};
+
 module.exports = {
   signup,
   login,
@@ -145,4 +196,6 @@ module.exports = {
   userData,
   getAllUsers,
   deleteUser,
+  deleteAllUsers,
+  refreshToken,
 };

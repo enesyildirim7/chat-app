@@ -1,14 +1,18 @@
 import React, { useState } from "react";
-import axios from "axios";
+import Axios from "../api/axios";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, Navigate } from "react-router-dom";
+import { setAuth } from "../redux/authSlice";
 import "../styles/LoginPage.css";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Checkbox } from "@mui/material";
-import { useSelector } from "react-redux";
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const darkMode = useSelector((state) => state.darkMode).darkMode;
   const [user, setUser] = useState({ email: "", password: "" });
   const showPassword = () => {
@@ -23,14 +27,18 @@ const LoginForm = () => {
   const loginChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
-  const loginSubmit = () => {
-    axios
-      .post("http://localhost:5000/api/user/login", user, { withCredentials: true })
-      .then((res) => {
-        console.log(res.data);
-      })
+  const loginSubmit = (e) => {
+    e.preventDefault();
+    Axios.post("/api/user/login", user)
+      .then((res) =>
+        res.status === 200
+          ? (dispatch(setAuth(true)),
+            navigate("/messages"),
+            setUser({ email: "", password: "" }))
+          : dispatch(setAuth(false))
+      )
       .catch((err) => {
-        console.log(err);
+        dispatch(setAuth(false));
       });
   };
   return (
@@ -84,11 +92,9 @@ const LoginForm = () => {
             className="password-field"
           ></input>
         </div>
-        {/* <Link to="/messages"> */}
-        <button type="button" className="login-btn" onClick={loginSubmit}>
+        <button type="submit" className="login-btn">
           Login
         </button>
-        {/* </Link> */}
       </form>
       <div className="flex flex-row w-full justify-center divide-brand-light/30 text-sm mt-6 text-brand-dark dark:text-brand-light/75">
         <div className="mr-2">Don't have an account?</div>
@@ -101,9 +107,10 @@ const LoginForm = () => {
 };
 
 const LoginPage = () => {
-  return (
+  const auth = useSelector((state) => state.auth.auth);
+  return auth === false || auth === "" ? (
     <>
-      <Header logoarea darkmode buttons />
+      <Header logoarea darkmode buttons api />
       <div className="flex flex-col w-full items-center justify-center">
         <div className="text-4xl font-bold text-brand-dark dark:text-brand-light mb-10">
           Log in
@@ -111,6 +118,8 @@ const LoginPage = () => {
         <LoginForm />
       </div>
     </>
+  ) : (
+    <Navigate to="/" />
   );
 };
 

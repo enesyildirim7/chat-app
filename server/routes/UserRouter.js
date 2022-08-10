@@ -12,6 +12,8 @@ const {
   userData,
   getAllUsers,
   deleteUser,
+  deleteAllUsers,
+  refreshToken,
 } = require("../controllers/UserControllers");
 const { checkAuth, checkVerify } = require("../middlewares/auth");
 
@@ -20,37 +22,28 @@ const router = express.Router();
 // User Create
 router.post("/signup", signup);
 
-// router.post("/login", passport.authenticate("jwt", { session: false }), login);
-
+// Login
 router.post("/login", login);
 
+// Get auth user info
 router.get("/me", checkAuth, userData);
 
 router.get("/checkauth", checkAuth, (req, res) => {
   res.status(200).send("Authorize");
 });
 
+// Logout
 router.post("/logout", logout);
 
+// Delete auth user
 router.delete("/me", deleteUser);
 
 // Get All Users
 router.get("/all", getAllUsers);
 
-router.delete("/delete/all", async (req, res) => {
-  try {
-    const idlist = [];
-    const ids = await UserModel.find({});
-    ids.forEach((user) => {
-      idlist.push(user._id);
-    });
-    for (let i = 0; i < ids.length; i++) {
-      await UserModel.findByIdAndDelete(ids[i]);
-    }
-    res.status(200).send("All user deleted.");
-  } catch {
-    res.status(404).send("Silinmedi.");
-  }
-});
+// Delete All Users
+router.delete("/delete/all", deleteAllUsers);
+
+router.get("/refreshtoken", refreshToken);
 
 module.exports = router;
