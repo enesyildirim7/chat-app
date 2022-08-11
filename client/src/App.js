@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./layouts/PrivateRoute";
 import store from "./redux/store";
+import { ROUTES } from "./configs/routes";
 import { Provider } from "react-redux";
 import HomePage from "./pages/HomePage";
 import MessagesPage from "./pages/MessagesPage";
@@ -14,9 +15,9 @@ const App = () => {
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path={ROUTES.Home} element={<HomePage />} />
           <Route
-            path="/messages"
+            path={ROUTES.Messages}
             element={
               <PrivateRoute>
                 <MessagesPage />
@@ -24,15 +25,15 @@ const App = () => {
             }
           />
           <Route
-            path="/apitest"
+            path={ROUTES.ApiTest}
             element={
               <PrivateRoute>
                 <APITest />
               </PrivateRoute>
             }
           />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path={ROUTES.Login} element={<LoginPage />} />
+          <Route path={ROUTES.Signup} element={<RegisterPage />} />
         </Routes>
       </BrowserRouter>
     </Provider>

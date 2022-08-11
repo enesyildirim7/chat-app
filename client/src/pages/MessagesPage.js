@@ -174,7 +174,13 @@ const Texting = () => {
         </div>
         <div className="write-area">
           <div className="flex flex-row items-center justify-between text-field-wrapper">
-            <textarea type="text" name="message" className="text-field" />
+            <textarea
+              type="text"
+              name="message"
+              rows="1"
+              className="text-field sbar"
+              autocomplete="off"
+            />
             <button className="ml-4 text-brand-primary rounded-full">
               <SendRoundedIcon />
             </button>
@@ -225,8 +231,9 @@ const MessageList = () => {
               type="text"
               name="search"
               placeholder="Search chat"
+              autoComplete="off"
               className="search-field"
-            ></input>
+            />
           </div>
         </div>
         <div className="relative flex w-full h-full overflow-auto sbar">

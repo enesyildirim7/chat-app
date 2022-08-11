@@ -4,10 +4,19 @@ const { v4: uuidv4 } = require("uuid");
 
 const ChannelModel = new Schema({
   _id: { type: String, default: uuidv4 },
-  name: { type: String },
-  creator: { type: mongoose.SchemaTypes.ObjectId },
+  name: { type: String, required: true },
+  desciption: { type: String },
+  creator: { type: String, ref: "user" },
   members: [{ type: Array }], //TODO: Relation with user
-  messages: [{ type: String }], //TODO: Relation with user messages
+  messages: [
+    {
+      _id: { type: String, default: uuidv4 },
+      message: { type: String },
+      sender: { type: String, ref: "user" },
+      created: { type: Date, default: Date.now() },
+      updated: { type: Date, default: Date.now() },
+    },
+  ], //TODO: Relation with user messages
   created: { type: Date, default: Date.now() },
   updated: { type: Date, default: Date.now() },
 });

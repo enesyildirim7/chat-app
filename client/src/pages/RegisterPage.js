@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/RegisterPage.css";
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
 import Checkbox from "@mui/material/Checkbox";
@@ -9,6 +9,7 @@ import DoneAllRoundedIcon from "@mui/icons-material/DoneAllRounded";
 import Axios from "../api/axios";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -31,7 +32,7 @@ const RegisterForm = () => {
   const registerSubmit = (e) => {
     e.preventDefault();
     Axios.post("/api/user/signup", user)
-      .then()
+      .then(navigate("/login"))
       .catch((err) => {
         console.log(err.response);
       });

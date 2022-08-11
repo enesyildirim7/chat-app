@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Axios from "../api/axios";
+import { ROUTES } from "../configs/routes";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Navigate } from "react-router-dom";
 import { setAuth } from "../redux/authSlice";
@@ -98,7 +99,7 @@ const LoginForm = () => {
       </form>
       <div className="flex flex-row w-full justify-center divide-brand-light/30 text-sm mt-6 text-brand-dark dark:text-brand-light/75">
         <div className="mr-2">Don't have an account?</div>
-        <Link to="/register" className="hover:text-brand-primary">
+        <Link to={ROUTES.Signup} className="hover:text-brand-primary">
           Sign up
         </Link>
       </div>

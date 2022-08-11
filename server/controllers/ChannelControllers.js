@@ -28,6 +28,21 @@ const getAllChannels = (req, res) => {
     });
 };
 
+const getOwnChannels = (req, res) => {
+  try {
+    const cookies = req.cookies;
+    const accessToken = cookies.accessToken;
+    if (accessToken) {
+      const verifiedAccess = verifyAccessJWT(accessToken);
+      const userChannels = ChannelModel.find({ creator: verifiedAccess.id });
+    } else {
+      throw new Error("Access Token is not found.");
+    }
+  } catch {
+    res.status(404).send("Something went wrong.");
+  }
+};
+
 const getChannel = (req, res) => {};
 
 const deleteChannel = (req, res) => {};
@@ -36,6 +51,7 @@ module.exports = {
   createChannel,
   updateChannel,
   getAllChannels,
+  getOwnChannels,
   getChannel,
   deleteChannel,
 };

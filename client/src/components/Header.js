@@ -1,7 +1,9 @@
 import React from "react";
+import { ROUTES } from "../configs/routes";
+import Axios from "../api/axios";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleDarkMode } from "../redux/darkModeSlice";
 import { setAuth } from "../redux/authSlice";
+import { toggleDarkMode } from "../redux/darkModeSlice";
 import LoginButton from "../components/LoginButton";
 import RegisterButton from "../components/RegisterButton";
 import LogoutButton from "./LogoutButton";
@@ -13,7 +15,7 @@ import { Link } from "react-router-dom";
 
 export const LogoArea = () => {
   return (
-    <Link to="/">
+    <Link to={ROUTES.Home}>
       <div className="font-bold text-brand-primary dark:text-brand-light text-md cursor-pointer">
         SJ Chat App
       </div>
@@ -45,25 +47,36 @@ export const DarkModeIcon = () => {
   );
 };
 
-const Header = React.memo(({ logoarea, darkmode, buttons, logout, api }) => {
+const Header = React.memo(({ logoarea, darkmode, buttons, api }) => {
   const auth = useSelector((state) => state.auth.auth);
+  const dispatch = useDispatch();
+  if (auth === "") {
+    Axios.get("/api/user/checkauth")
+      .then((res) => {
+        res.status === 200 ? dispatch(setAuth(true)) : dispatch(setAuth(false));
+      })
+      .catch((err) => {
+        dispatch(setAuth(false));
+      });
+  }
   return (
     <header className="flex w-full justify-between items-center min-h-24 px-48 py-6">
       {logoarea ? <LogoArea /> : null}
       <div className="flex flex-row space-x-3 justify-center items-center">
         {darkmode ? <DarkModeIcon /> : null}
         {buttons ? (
-          auth === false || auth === "" ? (
+          auth === true ? (
+            <>
+              <ProfileButton /> <LogoutButton />
+            </>
+          ) : (
             <>
               <LoginButton /> <RegisterButton />
             </>
-          ) : (
-            <ProfileButton />
           )
         ) : null}
-        {logout ? <LogoutButton /> : null}
         {api ? (
-          <Link to="/apitest">
+          <Link to={ROUTES.ApiTest}>
             <button className="rounded-lg bg-violet-500 text-slate-800 px-4 py-1.5">
               Api Test
             </button>

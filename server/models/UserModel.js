@@ -9,7 +9,7 @@ const UserModel = new Schema({
   firstName: { type: String, default: undefined },
   lastName: { type: String, default: undefined },
   email: { type: String, required: true, unique: true },
-  password: { type: String },
+  password: { type: String, required: true },
   isActive: { type: Boolean, default: true },
   isVerify: { type: Boolean, default: false },
   isAdmin: { type: Boolean, default: false },
@@ -21,13 +21,6 @@ const UserModel = new Schema({
     refreshToken: { type: String, default: undefined },
   },
 });
-
-// UserModel.pre("save", (next) => {
-//   const user = this;
-//   const hash = bcrypt.hashSync(this.password, 10);
-//   this.password = hash;
-//   next();
-// });
 
 UserModel.pre("save", function (next) {
   var user = this;

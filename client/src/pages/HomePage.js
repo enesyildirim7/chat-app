@@ -1,4 +1,5 @@
 import React from "react";
+import { ROUTES } from "../configs/routes";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -14,7 +15,7 @@ const Content = () => {
         </div>
       </div>
       <div>
-        <Link to="/messages">
+        <Link to={ROUTES.Messages}>
           <button className="w-40 h-12 rounded-full bg-brand-primary text-brand-light font-normal text-sm shadow-xlarge shadow-brand-primary">
             Start Now
           </button>
