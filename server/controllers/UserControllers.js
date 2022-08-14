@@ -1,7 +1,5 @@
-const mongoose = require("mongoose");
-const UserModel = require("../models/UserModel");
+const { UserModel } = require("../models/UserModel");
 const _ = require("lodash");
-const jwt = require("jsonwebtoken");
 const authConfig = require("../configs/authConfig");
 const {
   signupVerify,

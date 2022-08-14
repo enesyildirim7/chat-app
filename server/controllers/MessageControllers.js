@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-const MessageModel = require("../models/MessageModel");
+const { MessageModel } = require("../models/MessageModel");
 
 const createMessage = (req, res) => {
   const newMessage = new MessageModel({

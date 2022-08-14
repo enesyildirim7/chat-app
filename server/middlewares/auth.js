@@ -1,11 +1,6 @@
-const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const authConfig = require("../configs/authConfig");
-const LocalStrategy = require("passport-local").Strategy;
-const JWTStrategy = require("passport-jwt").Strategy;
-const ExtractJWT = require("passport-jwt").ExtractJwt;
-const JwtCookieComboStrategy = require("passport-jwt-cookiecombo").Strategy;
-const UserModel = require("../models/UserModel");
+const { UserModel } = require("../models/UserModel");
 
 const signAccessJWT = (id = String, email = String) => {
   try {
@@ -141,55 +136,6 @@ const checkVerify = async (req, res, next) => {
     res.status(404).send("Something went wrong.");
   }
 };
-
-// passport.use(
-//   "signup",
-//   new LocalStrategy(
-//     { usernameField: "email", passwordField: "password", session: false },
-//     signupVerify
-//   )
-// );
-
-// passport.use(
-//   "login",
-//   new LocalStrategy(
-//     { usernameField: "email", passwordField: "password", session: false },
-//     loginVerify
-//   )
-// );
-
-// const cookieExtractor = function (req) {
-//   const token = null;
-//   if (req && req.cookies) {
-//     console.log(req.cookies);
-//     token = req.cookies["access_token"];
-//   }
-//   return token;
-// };
-
-// passport.use(
-//   "jwt",
-//   new JWTStrategy(
-//     {
-//       secretOrKey: jwtConf.secretKey,
-//       jwtFromRequest: ExtractJWT.fromHeader(),
-//     },
-//     async (jwt_payload, done) => {
-//       UserModel.findOne({ _id: jwt_payload._id }, (err, user) => {
-//         if (err) return done(err, false);
-//         if (user) return done(null, user);
-//         else {
-//           return done(null, false);
-//         }
-//       });
-//       try {
-//         return done(null, token.user);
-//       } catch (error) {
-//         done(error);
-//       }
-//     }
-//   )
-// );
 
 module.exports = {
   signAccessJWT,

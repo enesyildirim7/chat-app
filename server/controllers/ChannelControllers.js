@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-const ChannelModel = require("../models/ChannelModel");
+const { ChannelModel } = require("../models/ChannelModel");
 
 const createChannel = (req, res) => {
   const newChannel = new ChannelModel({
