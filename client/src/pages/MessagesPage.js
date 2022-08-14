@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import "../styles/MessagesPage.css";
 import SearchIcon from "@mui/icons-material/Search";
@@ -192,6 +192,11 @@ const Texting = () => {
 };
 
 const MessageList = () => {
+  const [search, setSearch] = useState("");
+
+  const handleChange = (event) => {
+    setSearch(event.target.value);
+  };
   const list = [
     {
       channelId: 1,
@@ -233,20 +238,23 @@ const MessageList = () => {
               placeholder="Search chat"
               autoComplete="off"
               className="search-field"
+              onChange={handleChange}
             />
           </div>
         </div>
         <div className="relative flex w-full h-full overflow-auto sbar">
           <div className="absolute flex flex-col w-full">
-            {list?.map((i) => (
-              <User
-                key={i.channelId}
-                from={i.from}
-                date={i.date}
-                message={i.message}
-                amount={i.amount}
-              />
-            ))}
+            {list
+              ?.filter((channel) => channel.from.toLowerCase().includes(search))
+              .map((i) => (
+                <User
+                  key={i.channelId}
+                  from={i.from}
+                  date={i.date}
+                  message={i.message}
+                  amount={i.amount}
+                />
+              ))}
           </div>
         </div>
       </div>
