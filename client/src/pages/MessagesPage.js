@@ -179,7 +179,7 @@ const Texting = () => {
               name="message"
               rows="1"
               className="text-field sbar"
-              autocomplete="off"
+              autoComplete="off"
             />
             <button className="ml-4 text-brand-primary rounded-full">
               <SendRoundedIcon />
@@ -193,6 +193,7 @@ const Texting = () => {
 
 const MessageList = () => {
   const [search, setSearch] = useState("");
+  const [messageList, setMessageList] = useState([]);
 
   const handleChange = (event) => {
     setSearch(event.target.value);
@@ -221,7 +222,6 @@ const MessageList = () => {
       amount: "0",
     },
     { channelId: 5, from: "Babam", date: "00.00", message: "Fotoğraf", amount: "0" },
-    // { from: "Doktor Sena", date: "00.00", message: "Sağol 🙏", amount: "0" },
   ];
 
   return (
