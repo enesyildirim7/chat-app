@@ -99,6 +99,8 @@ const checkAuth = async (req, res, next) => {
       } catch {
         const newAccessToken = await tokenRefresh(refreshToken);
 
+        req.cookies.access_token = newAccessToken;
+
         res.clearCookie(authConfig.jwtConf.accessTokenName);
         res.cookie(authConfig.jwtConf.accessTokenName, newAccessToken, {
           httpOnly: true,

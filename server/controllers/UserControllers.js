@@ -62,11 +62,11 @@ const login = async (req, res, next) => {
         user.setAccessToken(accessToken);
         user.setRefreshToken(refreshToken);
 
-        res.cookie("access_token", accessToken, {
+        res.cookie(authConfig.accessTokenName, accessToken, {
           httpOnly: true,
           secure: true,
         });
-        res.cookie("refresh_token", refreshToken, {
+        res.cookie(authConfig.refreshTokenName, refreshToken, {
           httpOnly: true,
           secure: true,
         });

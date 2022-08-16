@@ -9,8 +9,8 @@ const ChannelSchema = new Schema({
   name: { type: String, required: true },
   desciption: { type: String },
   creator: UserSchema,
-  members: [UserSchema], //TODO: Relation with user
-  messages: [MessageSchema], //TODO: Relation with user messages
+  members: [{ UserSchema }], //TODO: Relation with user
+  messages: [{ MessageSchema }], //TODO: Relation with user messages
   created: { type: Date, default: Date.now() },
   updated: { type: Date, default: Date.now() },
 });
